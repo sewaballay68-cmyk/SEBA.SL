@@ -1,0 +1,1669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SeBa.sl - Home</title>
+
+<!-- SUPABASE -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    font-family:Arial, sans-serif;
+    background:#f0f2f5;
+    color:#222;
+}
+
+/* ================= HEADER ================= */
+
+header{
+    background:#d90000;
+    color:white;
+    position:sticky;
+    top:0;
+    z-index:1000;
+    box-shadow:0 2px 8px rgba(0,0,0,0.2);
+}
+
+.header-inner{
+    max-width:1200px;
+    margin:auto;
+    min-height:65px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:10px 15px;
+}
+
+.logo{
+    font-size:27px;
+    font-weight:bold;
+}
+
+.logo span{
+    color:#ffe600;
+}
+
+.menu-button{
+    background:none;
+    border:none;
+    color:white;
+    font-size:28px;
+    cursor:pointer;
+}
+
+nav{
+    display:none;
+    background:#b80000;
+}
+
+nav a{
+    display:block;
+    padding:14px 18px;
+    color:white;
+    text-decoration:none;
+    font-weight:bold;
+    border-top:1px solid rgba(255,255,255,0.15);
+}
+
+nav a:hover{
+    background:#900000;
+}
+
+nav.show{
+    display:block;
+}
+
+/* ================= MAIN ================= */
+
+.main{
+    width:100%;
+    max-width:900px;
+    margin:auto;
+    padding:18px 10px 50px;
+}
+
+/* ================= CREATE POST ================= */
+
+.create-post{
+    background:white;
+    border-radius:15px;
+    padding:20px;
+    margin-bottom:20px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.12);
+}
+
+.create-title{
+    font-size:22px;
+    font-weight:bold;
+    margin-bottom:15px;
+}
+
+.post-top{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:15px;
+}
+
+.profile-link{
+    text-decoration:none;
+}
+
+.avatar{
+    width:55px;
+    height:55px;
+    border-radius:50%;
+    background:#ddd;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    font-size:25px;
+    flex-shrink:0;
+}
+
+.avatar img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+#currentUser{
+    font-size:17px;
+}
+
+#postText{
+    width:100%;
+    min-height:150px;
+    resize:vertical;
+    border:1px solid #ddd;
+    border-radius:12px;
+    padding:15px;
+    font-size:17px;
+    outline:none;
+    margin-bottom:12px;
+}
+
+#postText:focus{
+    border-color:#d90000;
+}
+
+.post-options{
+    display:flex;
+    gap:10px;
+    margin-bottom:12px;
+}
+
+.post-options button{
+    flex:1;
+    padding:13px;
+    border:none;
+    border-radius:9px;
+    background:#f0f2f5;
+    cursor:pointer;
+    font-size:15px;
+}
+
+.post-options button:hover{
+    background:#e1e3e6;
+}
+
+.post-button{
+    width:100%;
+    padding:14px;
+    background:#d90000;
+    color:white;
+    border:none;
+    border-radius:10px;
+    font-size:18px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.post-button:hover{
+    background:#b80000;
+}
+
+#mediaPreview img,
+#mediaPreview video{
+    width:100%;
+    max-height:450px;
+    object-fit:contain;
+    border-radius:10px;
+    margin-bottom:12px;
+    background:#000;
+}
+
+/* ================= FEED ================= */
+
+.feed-title{
+    font-size:25px;
+    font-weight:bold;
+    margin:20px 5px 12px;
+}
+
+.post-card{
+    background:white;
+    border-radius:15px;
+    margin-bottom:20px;
+    overflow:hidden;
+    box-shadow:0 2px 8px rgba(0,0,0,0.12);
+}
+
+.post-header{
+    display:flex;
+    align-items:center;
+    padding:15px;
+    gap:12px;
+}
+
+.post-user-info{
+    flex:1;
+}
+
+.post-user-name{
+    font-weight:bold;
+    font-size:17px;
+}
+
+.post-date{
+    color:#777;
+    font-size:13px;
+    margin-top:3px;
+}
+
+.post-content{
+    padding:0 15px 15px;
+    font-size:17px;
+    line-height:1.5;
+    white-space:pre-wrap;
+    word-wrap:break-word;
+}
+
+.post-media{
+    width:100%;
+    max-height:650px;
+    object-fit:contain;
+    background:#000;
+    display:block;
+}
+
+.post-actions{
+    display:flex;
+    border-top:1px solid #eee;
+    border-bottom:1px solid #eee;
+}
+
+.post-actions button{
+    flex:1;
+    border:none;
+    background:white;
+    padding:14px 5px;
+    font-size:15px;
+    cursor:pointer;
+}
+
+.post-actions button:hover{
+    background:#f0f2f5;
+}
+
+.comments{
+    padding:12px 15px;
+}
+
+.comment{
+    background:#f0f2f5;
+    border-radius:12px;
+    padding:9px 12px;
+    margin-bottom:7px;
+    font-size:14px;
+}
+
+.comment strong{
+    display:block;
+    margin-bottom:3px;
+}
+
+.comment-form{
+    display:flex;
+    gap:8px;
+    margin-top:10px;
+}
+
+.comment-form input{
+    flex:1;
+    border:1px solid #ddd;
+    border-radius:20px;
+    padding:10px 14px;
+    outline:none;
+}
+
+.comment-form button{
+    background:#d90000;
+    color:white;
+    border:none;
+    border-radius:20px;
+    padding:10px 15px;
+    cursor:pointer;
+}
+
+.empty{
+    background:white;
+    padding:40px 20px;
+    text-align:center;
+    border-radius:15px;
+    color:#777;
+}
+
+.loading{
+    text-align:center;
+    padding:30px;
+}
+
+/* ================= MOBILE ================= */
+
+@media(min-width:800px){
+
+    .menu-button{
+        display:none;
+    }
+
+    nav{
+        display:flex !important;
+        background:#d90000;
+        max-width:1200px;
+        margin:auto;
+        justify-content:center;
+    }
+
+    nav a{
+        border:none;
+        padding:12px 14px;
+    }
+
+}
+
+@media(max-width:500px){
+
+    .main{
+        padding:10px 7px 40px;
+    }
+
+    .create-post{
+        padding:14px;
+        border-radius:12px;
+    }
+
+    .create-title{
+        font-size:20px;
+    }
+
+    #postText{
+        min-height:130px;
+        font-size:16px;
+    }
+
+    .post-card{
+        border-radius:10px;
+    }
+
+    .post-media{
+        max-height:500px;
+    }
+
+    .post-actions button{
+        font-size:13px;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- ================= HEADER ================= -->
+
+<header>
+
+    <div class="header-inner">
+
+        <div class="logo">
+            SeBa<span>.sl</span>
+        </div>
+
+        <button class="menu-button" onclick="toggleMenu()">
+            ☰
+        </button>
+
+    </div>
+
+    <nav id="navigation">
+
+        <a href="index.html">🏠 Home</a>
+
+        <a href="profile.html">👤 Profile</a>
+
+        <a href="marketplace.html">🛒 Marketplace</a>
+
+        <a href="portfolio.html">💼 Portfolio</a>
+
+        <a href="about.html">ℹ️ About</a>
+
+        <a href="service.html">🛠 Services</a>
+
+        <a href="contact.html">📞 Contact</a>
+
+    </nav>
+
+</header>
+
+
+<!-- ================= MAIN ================= -->
+
+<main class="main">
+
+
+    <!-- CREATE POST -->
+
+    <section class="create-post">
+
+        <div class="create-title">
+            Create a post
+        </div>
+
+        <div class="post-top">
+
+            <a href="profile.html" class="profile-link">
+
+                <div class="avatar">
+
+                    <img
+                        id="myAvatar"
+                        src=""
+                        alt="Profile"
+                        style="display:none;"
+                    >
+
+                    <span id="defaultAvatar">👤</span>
+
+                </div>
+
+            </a>
+
+            <a href="profile.html"
+                <style="text-decoration:none;color:#222;"
+              
+            
+
+                <strong id="currentUser">
+                    Loading user...
+                </strong>
+
+            </a>
+
+        </div>
+
+
+        <textarea
+            id="postText"
+            placeholder="What's on your mind?"
+        ></textarea>
+
+
+        <div id="mediaPreview"></div>
+
+
+        <div class="post-options">
+
+            <button
+                type="button"
+                onclick="document.getElementById('imageInput').click()"
+            >
+                📷 Photo
+            </button>
+
+            <button
+                type="button"
+                onclick="document.getElementById('videoInput').click()"
+            >
+                🎥 Video
+            </button>
+
+        </div>
+
+
+        <input
+            type="file"
+            id="imageInput"
+            accept="image/*"
+            hidden
+            onchange="previewImage(event)"
+        >
+
+        <input
+            type="file"
+            id="videoInput"
+            accept="video/*"
+            hidden
+            onchange="previewVideo(event)"
+        >
+
+
+        <button
+            class="post-button"
+            onclick="createPost()"
+        >
+            Post
+        </button>
+
+    </section>
+
+
+    <!-- FEED -->
+
+    <div class="feed-title">
+        SeBa.sl Feed
+    </div>
+
+
+    <div id="feed">
+
+        <div class="loading">
+            Loading posts...
+        </div>
+
+    </div>
+
+
+</main>
+
+
+<script>
+
+/* =====================================================
+   SUPABASE
+===================================================== */
+
+/*
+IMPORTANT:
+
+If you already have a supabase.js file containing your
+Supabase URL and key, you can use that file instead.
+
+Otherwise put your Supabase information below.
+*/
+
+const SUPABASE_URL = "https://eoksnxperedpwzocakwz.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_GitlhcalHtwnZN8ugp-qQw_FofFHPAB";
+
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY
+    );
+
+
+/* =====================================================
+   MENU
+===================================================== */
+
+function toggleMenu(){
+
+    document
+        .getElementById("navigation")
+        .classList.toggle("show");
+
+}
+
+
+/* =====================================================
+   VARIABLES
+===================================================== */
+
+let selectedFile = null;
+let selectedMediaType = null;
+
+
+/* =====================================================
+   PREVIEW IMAGE
+===================================================== */
+
+function previewImage(event){
+
+    const file = event.target.files[0];
+
+    if(!file){
+        return;
+    }
+
+    selectedFile = file;
+    selectedMediaType = "image";
+
+    const preview =
+        document.getElementById("mediaPreview");
+
+    const url =
+        URL.createObjectURL(file);
+
+    preview.innerHTML = `
+        <img src="${url}" alt="Preview">
+    `;
+
+}
+
+
+/* =====================================================
+   PREVIEW VIDEO
+===================================================== */
+
+function previewVideo(event){
+
+    const file = event.target.files[0];
+
+    if(!file){
+        return;
+    }
+
+    selectedFile = file;
+    selectedMediaType = "video";
+
+    const preview =
+        document.getElementById("mediaPreview");
+
+    const url =
+        URL.createObjectURL(file);
+
+    preview.innerHTML = `
+        <video src="${url}" controls></video>
+    `;
+
+}
+
+
+/* =====================================================
+   GET CURRENT USER
+===================================================== */
+
+async function getCurrentUser(){
+
+    const {
+        data,
+        error
+    } = await supabaseClient.auth.getUser();
+
+    if(error){
+
+        console.log(error);
+
+        return null;
+
+    }
+
+    return data.user;
+
+}
+
+
+/* =====================================================
+   LOAD USER PROFILE
+===================================================== */
+
+async function loadMyProfile(){
+
+    const user =
+        await getCurrentUser();
+
+    if(!user){
+
+        document.getElementById("currentUser")
+            .textContent = "Please login";
+
+        return;
+
+    }
+
+
+    document.getElementById("currentUser")
+        .textContent =
+        user.email || "SeBa.sl User";
+
+
+    /*
+    This tries to load the user's profile picture.
+
+    Your profiles table should contain:
+
+    id
+    full_name
+    avatar_url
+
+    where id = auth.users.id
+    */
+
+    const {
+        data:profile,
+        error
+    } =
+    await supabaseClient
+        .from("profiles")
+        .select("full_name, avatar_url")
+        .eq("id", user.id)
+        .maybeSingle();
+
+
+    if(error){
+
+        console.log(
+            "Profile loading:",
+            error.message
+        );
+
+        return;
+
+    }
+
+
+    if(profile){
+
+        if(profile.full_name){
+
+            document.getElementById("currentUser")
+                .textContent =
+                profile.full_name;
+
+        }
+
+
+        if(profile.avatar_url){
+
+            const image =
+                document.getElementById("myAvatar");
+
+            image.src =
+                profile.avatar_url;
+
+            image.style.display =
+                "block";
+
+            document.getElementById("defaultAvatar")
+                .style.display =
+                "none";
+
+        }
+
+    }
+
+}
+
+
+/* =====================================================
+   CREATE POST
+===================================================== */
+
+async function createPost(){
+
+    const user =
+        await getCurrentUser();
+
+
+    if(!user){
+
+        alert(
+            "Please login before creating a post."
+        );
+
+        window.location.href =
+            "login.html";
+
+        return;
+
+    }
+
+
+    const text =
+        document.getElementById("postText")
+            .value
+            .trim();
+
+
+    if(!text && !selectedFile){
+
+        alert(
+            "Write something or select a photo/video."
+        );
+
+        return;
+
+    }
+
+
+    let mediaUrl = null;
+    let mediaType = null;
+
+
+    /* ============================
+       UPLOAD MEDIA
+    ============================ */
+
+    if(selectedFile){
+
+        const fileName =
+            user.id +
+            "/" +
+            Date.now() +
+            "_" +
+            selectedFile.name
+                .replace(/\s+/g, "_");
+
+
+        const {
+            data:uploadData,
+            error:uploadError
+        } =
+        await supabaseClient.storage
+            .from("posts")
+            .upload(
+                fileName,
+                selectedFile,
+                {
+                    cacheControl:"3600",
+                    upsert:false
+                }
+            );
+
+
+        if(uploadError){
+
+            alert(
+                "Media upload failed: " +
+                uploadError.message
+            );
+
+            console.log(uploadError);
+
+            return;
+
+        }
+
+
+        const {
+            data:publicData
+        } =
+        supabaseClient.storage
+            .from("posts")
+            .getPublicUrl(
+                uploadData.path
+            );
+
+
+        mediaUrl =
+            publicData.publicUrl;
+
+        mediaType =
+            selectedMediaType;
+
+    }
+
+
+    /* ============================
+       SAVE POST TO DATABASE
+    ============================ */
+
+    const {
+        error:postError
+    } =
+    await supabaseClient
+        .from("posts")
+        .insert({
+
+            user_id:user.id,
+
+            content:text,
+
+            media_url:mediaUrl,
+
+            media_type:mediaType
+
+        });
+
+
+    if(postError){
+
+        alert(
+            "Post could not be saved: " +
+            postError.message
+        );
+
+        console.log(postError);
+
+        return;
+
+    }
+
+
+    /* ============================
+       CLEAR FORM
+    ============================ */
+
+    document.getElementById("postText")
+        .value = "";
+
+    document.getElementById("mediaPreview")
+        .innerHTML = "";
+
+    document.getElementById("imageInput")
+        .value = "";
+
+    document.getElementById("videoInput")
+        .value = "";
+
+    selectedFile = null;
+    selectedMediaType = null;
+
+
+    alert("Post published successfully!");
+
+
+    loadPosts();
+
+}
+
+
+/* =====================================================
+   LOAD ALL POSTS
+===================================================== */
+
+async function loadPosts(){
+
+    const feed =
+        document.getElementById("feed");
+
+
+    feed.innerHTML =
+        `<div class="loading">
+            Loading posts...
+        </div>`;
+
+
+    /*
+    IMPORTANT:
+
+    This reads the posts table from Supabase.
+
+    Therefore every user who has permission to read
+    the table can see the same posts.
+    */
+
+    const {
+        data:posts,
+        error
+    } =
+    await supabaseClient
+        .from("posts")
+        .select("*")
+        .order(
+            "created_at",
+            {
+                ascending:false
+            }
+        );
+
+
+    if(error){
+
+        console.log(error);
+
+        feed.innerHTML = `
+            <div class="empty">
+                <h3>Unable to load posts</h3>
+                <p>${escapeHTML(error.message)}</p>
+            </div>
+        `;
+
+        return;
+
+    }
+
+
+    if(!posts || posts.length === 0){
+
+        feed.innerHTML = `
+            <div class="empty">
+                <h3>No posts yet</h3>
+                <p>Be the first person to post on SeBa.sl.</p>
+            </div>
+        `;
+
+        return;
+
+    }
+
+
+    feed.innerHTML = "";
+
+
+    for(const post of posts){
+
+        await displayPost(post);
+
+    }
+
+}
+
+
+/* =====================================================
+   DISPLAY ONE POST
+===================================================== */
+
+async function displayPost(post){
+
+    const feed =
+        document.getElementById("feed");
+
+
+    let userName =
+        "SeBa.sl User";
+
+
+    let avatarUrl =
+        "";
+
+
+    /*
+    Load profile information
+    */
+
+    if(post.user_id){
+
+        const {
+            data:profile
+        } =
+        await supabaseClient
+            .from("profiles")
+            .select(
+                "full_name, avatar_url"
+            )
+            .eq(
+                "id",
+                post.user_id
+            )
+            .maybeSingle();
+
+
+        if(profile){
+
+            if(profile.full_name){
+
+                userName =
+                    profile.full_name;
+
+            }
+
+            if(profile.avatar_url){
+
+                avatarUrl =
+                    profile.avatar_url;
+
+            }
+
+        }
+
+    }
+
+
+    const date =
+        post.created_at
+        ?
+        new Date(post.created_at)
+            .toLocaleString()
+        :
+        "";
+
+
+    let avatarHTML = `
+        <div class="avatar">
+            👤
+        </div>
+    `;
+
+
+    if(avatarUrl){
+
+        avatarHTML = `
+            <div class="avatar">
+                <img
+                    src="${escapeAttribute(avatarUrl)}"
+                    alt="Profile"
+                >
+            </div>
+        `;
+
+    }
+
+
+    let mediaHTML = "";
+
+
+    if(
+        post.media_url &&
+        post.media_type === "image"
+    ){
+
+        mediaHTML = `
+            <img
+                class="post-media"
+                src="${escapeAttribute(post.media_url)}"
+                alt="Post image"
+            >
+        `;
+
+    }
+
+
+    if(
+        post.media_url &&
+        post.media_type === "video"
+    ){
+
+        mediaHTML = `
+            <video
+                class="post-media"
+                src="${escapeAttribute(post.media_url)}"
+                controls
+                preload="metadata"
+            ></video>
+        `;
+
+    }
+
+
+    const postHTML = `
+
+        <article
+            class="post-card"
+            id="post-${escapeAttribute(post.id)}"
+        >
+
+            <div class="post-header">
+
+                <a
+                    href="profile.html"
+                    class="profile-link"
+                >
+
+                    ${avatarHTML}
+
+                </a>
+
+
+                <div class="post-user-info">
+
+                    <a
+                        href="profile.html"
+                        style="
+                            text-decoration:none;
+                            color:#222;
+                        "
+                    >
+
+                        <div class="post-user-name">
+                            ${escapeHTML(userName)}
+                        </div>
+
+                    </a>
+
+
+                    <div class="post-date">
+                        ${escapeHTML(date)}
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            ${
+                post.content
+                ?
+                `
+                <div class="post-content">
+                    ${escapeHTML(post.content)}
+                </div>
+                `
+                :
+                ""
+            }
+
+
+            ${mediaHTML}
+
+
+            <div class="post-actions">
+
+                <button
+                    onclick="likePost('${escapeAttribute(post.id)}')"
+                >
+                    👍 Like
+                </button>
+
+
+                <button
+                    onclick="focusComment('${escapeAttribute(post.id)}')"
+                >
+                    💬 Comment
+                </button>
+
+
+                <button
+                    onclick="sharePost('${escapeAttribute(post.id)}')"
+                >
+                    ↗ Share
+                </button>
+
+            </div>
+
+
+            <div class="comments">
+
+                <div
+                    id="comments-${escapeAttribute(post.id)}"
+                >
+                    Loading comments...
+                </div>
+
+
+                <div class="comment-form">
+
+                    <input
+                        id="comment-input-${escapeAttribute(post.id)}"
+                        placeholder="Write a comment..."
+                    >
+
+                    <button
+                        onclick="addComment('${escapeAttribute(post.id)}')"
+                    >
+                        Send
+                    </button>
+
+                </div>
+
+            </div>
+
+        </article>
+
+    `;
+
+
+    feed.insertAdjacentHTML(
+        "beforeend",
+        postHTML
+    );
+
+
+    loadComments(post.id);
+
+}
+
+
+/* =====================================================
+   LIKE POST
+===================================================== */
+
+async function likePost(postId){
+
+    const user =
+        await getCurrentUser();
+
+
+    if(!user){
+
+        alert(
+            "Please login to like posts."
+        );
+
+        return;
+
+    }
+
+
+    const {
+        data:existing
+    } =
+    await supabaseClient
+        .from("post_likes")
+        .select("id")
+        .eq(
+            "post_id",
+            postId
+        )
+        .eq(
+            "user_id",
+            user.id
+        )
+        .maybeSingle();
+
+
+    if(existing){
+
+        await supabaseClient
+            .from("post_likes")
+            .delete()
+            .eq(
+                "id",
+                existing.id
+            );
+
+        alert("Like removed.");
+
+    }else{
+
+        const {
+            error
+        } =
+        await supabaseClient
+            .from("post_likes")
+            .insert({
+
+                post_id:postId,
+
+                user_id:user.id
+
+            });
+
+
+        if(error){
+
+            alert(
+                "Like failed: " +
+                error.message
+            );
+
+            return;
+
+        }
+
+        alert("Post liked!");
+
+    }
+
+}
+
+
+/* =====================================================
+   COMMENT
+===================================================== */
+
+function focusComment(postId){
+
+    const input =
+        document.getElementById(
+            "comment-input-" + postId
+        );
+
+
+    if(input){
+
+        input.focus();
+
+    }
+
+}
+
+
+async function addComment(postId){
+
+    const user =
+        await getCurrentUser();
+
+
+    if(!user){
+
+        alert(
+            "Please login to comment."
+        );
+
+        return;
+
+    }
+
+
+    const input =
+        document.getElementById(
+            "comment-input-" + postId
+        );
+
+
+    const comment =
+        input.value.trim();
+
+
+    if(!comment){
+
+        alert(
+            "Write a comment first."
+        );
+
+        return;
+
+    }
+
+
+    const {
+        error
+    } =
+    await supabaseClient
+        .from("comments")
+        .insert({
+
+            post_id:postId,
+
+            user_id:user.id,
+
+            comment:comment
+
+        });
+
+
+    if(error){
+
+        alert(
+            "Comment failed: " +
+            error.message
+        );
+
+        return;
+
+    }
+
+
+    input.value = "";
+
+    loadComments(postId);
+
+}
+
+
+/* =====================================================
+   LOAD COMMENTS
+===================================================== */
+
+async function loadComments(postId){
+
+    const box =
+        document.getElementById(
+            "comments-" + postId
+        );
+
+
+    if(!box){
+        return;
+    }
+
+
+    const {
+        data:comments,
+        error
+    } =
+    await supabaseClient
+        .from("comments")
+        .select("*")
+        .eq(
+            "post_id",
+            postId
+        )
+        .order(
+            "created_at",
+            {
+                ascending:true
+            }
+        );
+
+
+    if(error){
+
+        box.innerHTML = "";
+
+        return;
+
+    }
+
+
+    if(!comments || comments.length === 0){
+
+        box.innerHTML = "";
+
+        return;
+
+    }
+
+
+    box.innerHTML = "";
+
+
+    for(const item of comments){
+
+        let name =
+            "User";
+
+
+        if(item.user_id){
+
+            const {
+                data:profile
+            } =
+            await supabaseClient
+                .from("profiles")
+                .select("full_name")
+                .eq(
+                    "id",
+                    item.user_id
+                )
+                .maybeSingle();
+
+
+            if(
+                profile &&
+                profile.full_name
+            ){
+
+                name =
+                    profile.full_name;
+
+            }
+
+        }
+
+
+        box.innerHTML += `
+
+            <div class="comment">
+
+                <strong>
+                    ${escapeHTML(name)}
+                </strong>
+
+                ${escapeHTML(item.comment)}
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+/* =====================================================
+   SHARE POST
+===================================================== */
+
+async function sharePost(postId){
+
+    const url =
+        window.location.origin +
+        window.location.pathname +
+        "#post-" +
+        postId;
+
+
+    if(
+        navigator.share
+    ){
+
+        try{
+
+            await navigator.share({
+
+                title:"SeBa.sl Post",
+
+                text:"Check this post on SeBa.sl",
+
+                url:url
+
+            });
+
+        }catch(error){
+
+            console.log(error);
+
+        }
+
+    }else{
+
+        await navigator.clipboard.writeText(url);
+
+        alert(
+            "Post link copied!"
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   SECURITY
+===================================================== */
+
+function escapeHTML(value){
+
+    if(value === null || value === undefined){
+
+        return "";
+
+    }
+
+
+    return String(value)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+
+function escapeAttribute(value){
+
+    return escapeHTML(value);
+
+}
+
+
+/* =====================================================
+   START PAGE
+===================================================== */
+
+async function startPage(){
+
+    await loadMyProfile();
+
+    await loadPosts();
+
+}
+
+
+/* START */
+
+startPage();
+
+</script>
+
+</body>
+</html>
